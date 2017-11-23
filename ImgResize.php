@@ -1,5 +1,4 @@
-<?php
-namespace Model;
+<?php namespace Model\ImgResize;
 
 class ImgResize{
 	/** @var resource */
