@@ -159,7 +159,7 @@ class ImgResize
 	{
 		$newImg = $this->get($newSizes);
 
-		$mime = isset($newSizes['type']) ? $newSizes['type'] : $this->mime;
+		$mime = $newSizes['type'] ?? $this->mime;
 
 		if (file_exists($url))
 			unlink($url);
@@ -171,7 +171,7 @@ class ImgResize
 				$s = imagejpeg($newImg, $url);
 				break;
 			case 'image/png':
-				$s = imagepng($newImg, $url);
+				$s = imagepng($newImg, $url, 0);
 				break;
 			case 'image/gif':
 				$s = imagegif($newImg, $url);
