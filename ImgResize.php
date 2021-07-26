@@ -164,21 +164,18 @@ class ImgResize
 		if (file_exists($url))
 			unlink($url);
 
-		$s = false;
-
 		switch ($mime) {
 			case 'image/jpeg':
 				$s = imagejpeg($newImg, $url);
 				break;
 			case 'image/png':
-				$s = imagepng($newImg, $url, 0);
+				$s = imagepng($newImg, $url);
 				break;
 			case 'image/gif':
 				$s = imagegif($newImg, $url);
 				break;
 			default:
 				throw new \Exception('Unsupported mime type in ImgResize save');
-				break;
 		}
 
 		imagedestroy($newImg);
