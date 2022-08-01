@@ -2,15 +2,10 @@
 
 class ImgResize
 {
-	/** @var resource */
 	protected \GdImage $img;
-	/** @var int */
 	public int $w;
-	/** @var int */
 	public int $h;
-	/** @var string */
 	public string $mime;
-	/** @var array */
 	public array $exif;
 
 	/**
@@ -112,18 +107,18 @@ class ImgResize
 
 			if (!$newSizes['extend']) {
 				if ($ratio < $rightRatio) {
-					$new_width = $w * $hh / $h;
+					$new_width = (int)round($w * $hh / $h);
 					imagecopyresampled($newImg, $this->img, round(($ww - $new_width) / 2), 0, 0, 0, $new_width, $hh, $w, $h);
 				} else {
-					$new_height = $h * $ww / $w;
+					$new_height = (int)round($h * $ww / $w);
 					imagecopyresampled($newImg, $this->img, 0, round(($hh - $new_height) / 2), 0, 0, $ww, $new_height, $w, $h);
 				}
 			} else {
 				if ($ratio < $rightRatio) {
-					$new_height = $h * $ww / $w;
+					$new_height = (int)round($h * $ww / $w);
 					imagecopyresampled($newImg, $this->img, 0, round(($hh - $new_height) / 2), 0, 0, $ww, $new_height, $w, $h);
 				} else {
-					$new_width = $w * $hh / $h;
+					$new_width = (int)round($w * $hh / $h);
 					imagecopyresampled($newImg, $this->img, round(($ww - $new_width) / 2), 0, 0, 0, $new_width, $hh, $w, $h);
 				}
 			}
