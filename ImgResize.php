@@ -3,28 +3,26 @@
 class ImgResize
 {
 	/** @var resource */
-	protected $img;
+	protected \GdImage $img;
 	/** @var int */
-	public $w;
+	public int $w;
 	/** @var int */
-	public $h;
+	public int $h;
 	/** @var string */
-	public $mime;
+	public string $mime;
 	/** @var array */
-	public $exif;
+	public array $exif;
 
 	/**
 	 * ImgResize constructor.
 	 *
 	 * @param string $url
-	 * @param bool $ignore_non_existent
 	 * @throws \Exception
 	 */
-	public function __construct(string $url, bool $ignore_non_existent = false)
+	public function __construct(string $url)
 	{
-		if (!file_exists($url) and !$ignore_non_existent) {
+		if (!file_exists($url))
 			throw new \Exception('Non existing image');
-		}
 
 		$size = getimagesize($url);
 		$this->mime = $size['mime'];
@@ -32,24 +30,22 @@ class ImgResize
 
 		switch ($this->mime) {
 			case 'image/jpeg':
-				$this->img = imagecreatefromjpeg($url);
+				$this->img = imagecreatefromjpeg($url) ?: null;
 				break;
 			case 'image/png':
-				$this->img = imagecreatefrompng($url);
+				$this->img = imagecreatefrompng($url) ?: null;
 				break;
 			case 'image/gif':
-				$this->img = imagecreatefromgif($url);
+				$this->img = imagecreatefromgif($url) ?: null;
 				break;
 			default:
 				throw new \Exception('Image type not supported');
-				break;
 		}
 
-		if (!$this->img) {
+		if (!$this->img)
 			throw new \Exception('Image file not valid');
-		}
 
-		$ort = isset($this->exif['IFD0']['Orientation']) ? $this->exif['IFD0']['Orientation'] : (isset($this->exif['Orientation']) ? $this->exif['Orientation'] : 0);
+		$ort = $this->exif['IFD0']['Orientation'] ?? ($this->exif['Orientation'] ?? 0);
 
 		switch ($ort) {
 			case 3: // 180 rotate
@@ -68,14 +64,6 @@ class ImgResize
 	}
 
 	/**
-	 * @return bool
-	 */
-	public function isValid(): bool
-	{
-		return (bool)(is_resource($this->img) and get_resource_type($this->img) == 'gd');
-	}
-
-	/**
 	 *
 	 */
 	public function __destruct()
@@ -88,16 +76,16 @@ class ImgResize
 	 */
 	public function destroy()
 	{
-		if ($this->isValid())
+		if (isset($this->img))
 			imagedestroy($this->img);
-		$this->img = null;
+		unset($this->img);
 	}
 
 	/**
 	 * @param array $newSizes
-	 * @return resource
+	 * @return \GdImage
 	 */
-	public function get(array $newSizes = [])
+	public function get(array $newSizes = []): \GdImage
 	{
 		if (isset($newSizes['w']) and !isset($newSizes['h']))
 			$newSizes['h'] = $newSizes['w'] * $this->h / $this->w;
@@ -187,7 +175,7 @@ class ImgResize
 	/**
 	 * @return resource
 	 */
-	public function getClone()
+	public function getClone(): \GdImage
 	{
 		//Get sizes from image.
 		$w = $this->w;
@@ -222,7 +210,7 @@ class ImgResize
 	 * @param string $file
 	 * @return bool
 	 */
-	public function applyWatermark(string $file)
+	public function applyWatermark(string $file): bool
 	{
 		if (!file_exists($file))
 			return false;
