@@ -88,9 +88,9 @@ class ImgResize
 	public function get(array $newSizes = []): \GdImage
 	{
 		if (isset($newSizes['w']) and !isset($newSizes['h']))
-			$newSizes['h'] = $newSizes['w'] * $this->h / $this->w;
+			$newSizes['h'] = (int)round($newSizes['w'] * $this->h / $this->w);
 		if (isset($newSizes['h']) and !isset($newSizes['w']))
-			$newSizes['w'] = $newSizes['h'] * $this->w / $this->h;
+			$newSizes['w'] = (int)round($newSizes['h'] * $this->w / $this->h);
 
 		if (isset($newSizes['w'], $newSizes['h'])) {
 			$ww = $newSizes['w'];
