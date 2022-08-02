@@ -6,7 +6,7 @@ class ImgResize
 	public int $w;
 	public int $h;
 	public string $mime;
-	public array $exif;
+	public ?array $exif;
 
 	/**
 	 * ImgResize constructor.
@@ -21,7 +21,7 @@ class ImgResize
 
 		$size = getimagesize($url);
 		$this->mime = $size['mime'];
-		$this->exif = @exif_read_data($url);
+		$this->exif = (@exif_read_data($url)) ?: null;
 
 		switch ($this->mime) {
 			case 'image/jpeg':
@@ -40,7 +40,7 @@ class ImgResize
 		if (!$this->img)
 			throw new \Exception('Image file not valid');
 
-		$ort = $this->exif['IFD0']['Orientation'] ?? ($this->exif['Orientation'] ?? 0);
+		$ort = $this->exif ? ($this->exif['IFD0']['Orientation'] ?? $this->exif['Orientation'] ?? 0) : 0;
 
 		switch ($ort) {
 			case 3: // 180 rotate
