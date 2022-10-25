@@ -33,6 +33,9 @@ class ImgResize
 			case 'image/gif':
 				$this->img = imagecreatefromgif($url) ?: null;
 				break;
+			case 'image/webp':
+				$this->img = imagecreatefromwebp($url) ?: null;
+				break;
 			default:
 				throw new \Exception('Image type not supported');
 		}
@@ -156,6 +159,9 @@ class ImgResize
 				break;
 			case 'image/gif':
 				$s = imagegif($newImg, $url);
+				break;
+			case 'image/webp':
+				$s = imagewebp($newImg, $url);
 				break;
 			default:
 				throw new \Exception('Unsupported mime type in ImgResize save');
