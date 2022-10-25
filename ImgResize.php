@@ -174,7 +174,7 @@ class ImgResize
 	}
 
 	/**
-	 * @return resource
+	 * @return \GdImage
 	 */
 	public function getClone(): \GdImage
 	{
